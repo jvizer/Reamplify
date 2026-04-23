@@ -1062,7 +1062,7 @@
                         <div class="stake-title">Deposit SOL <span style="font-size:0.7rem; color:#cc8800; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; margin-left:0.5rem;">(simulated)</span></div>
                         <div class="stake-balance">
                             <div class="row"><span class="chip">SOL</span> <strong id="wallet-balance">— SOL</strong></div>
-                            <div class="row" style="margin-top:0.3rem;"><span class="chip">USDT</span> <strong id="wallet-usdc">— USDT</strong></div>
+                            <div class="row" style="margin-top:0.3rem;"><span class="chip">USDT</span> <strong id="wallet-usdt">— USDT</strong></div>
                         </div>
                     </div>
  
@@ -1193,7 +1193,7 @@
             provider: null,
             pubkey: null,
             solBalance: 0,
-            usdcBalance: 0,
+            usdtBalance: 0,
             solPrice: null,
             selected: null,
             positions: [],
@@ -1376,7 +1376,7 @@
             state.walletName = null;
             state.pubkey = null;
             state.solBalance = 0;
-            state.usdcBalance = 0;
+            state.usdtBalance = 0;
             $('connect-btn').textContent = 'Connect Wallet';
             $('connect-btn').classList.remove('connected');
             refreshUI();
@@ -1408,7 +1408,7 @@
             return lamports / 1_000_000_000;
         }
  
-        async function fetchUsdcBalance(pubkey) {
+        async function fetchUsdtBalance(pubkey) {
             const mint = state.network === 'devnet' ? USDT_MINT_DEVNET : USDT_MINT;
             const result = await rpc('getTokenAccountsByOwner', [
                 pubkey,
@@ -1429,10 +1429,10 @@
             try {
                 const [sol, USDT] = await Promise.all([
                     fetchSolBalance(state.pubkey),
-                    fetchUsdcBalance(state.pubkey).catch(() => 0),
+                    fetchUsdtBalance(state.pubkey).catch(() => 0),
                 ]);
                 state.solBalance = sol;
-                state.usdcBalance = USDT;
+                state.usdtBalance = USDT;
                 refreshUI();
             } catch (e) {
                 toast(`Balance fetch failed: ${e.message}`, 'error');
@@ -1575,7 +1575,7 @@
         function refreshUI() {
             // balance
             $('wallet-balance').textContent = state.connected ? fmtSOL(state.solBalance) : '— SOL';
-            $('wallet-usdc').textContent = state.connected ? fmtUSDT(state.usdcBalance) : '— USDT';
+            $('wallet-usdt').textContent = state.connected ? fmtUSDT(state.usdtBalance) : '— USDT';
  
             // price
             if (state.solPrice) {
